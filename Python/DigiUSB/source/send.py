@@ -10,19 +10,23 @@ sys.path.append("..")
 
 from arduino.usbdevice import ArduinoUsbDevice
 
-
-if __name__ == "__main__":
+def digiusb_init():
    try:
-      theDevice = ArduinoUsbDevice(idVendor=0x16c0, idProduct=0x05df)
+      return ArduinoUsbDevice(idVendor=0x16c0, idProduct=0x05df)
    except:
       sys.exit("No DigiUSB Device Found")
 
+def digiusb_send(device, data):
+  for d in data:
+    device.write(d)
+  
+if __name__ == "__main__":
+  theDevice = digiusb_init()
 
 
-   try:
-     user_input = sys.argv[1]+"\n"
-   except:
-     exit("No data to send")
-        
-   for c in user_input:
-     theDevice.write(ord(c))
+  try:
+    user_input = sys.argv[1]+"\n"
+  except:
+    exit("No data to send")
+  
+  digiusb_send(theDevice, map(ord,user_input))
